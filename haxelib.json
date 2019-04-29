@@ -8,6 +8,6 @@
   "version": "1.0.0",
   "url": "https://github.com/flashultra/uuid",
   "dependencies": {
-	"hxprng"
+	"hxprng": ""
   }
 }

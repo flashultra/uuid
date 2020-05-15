@@ -1,8 +1,12 @@
+package uuid;
+
 import haxe.Timer;
 import haxe.Int64;
 import haxe.io.Bytes;
 import haxe.crypto.Md5;
 import haxe.crypto.Sha1;
+
+import hxprng.PCG32;
 
 class Uuid {
 	inline static var DNS = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';

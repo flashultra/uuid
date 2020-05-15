@@ -7,7 +7,8 @@
   "releasenote": "Simple Uuid generation for v1, v3, v4 and v5",
   "version": "1.0.0",
   "url": "https://github.com/flashultra/uuid",
+  "classPath": "src/",
   "dependencies": {
-	"hxprng": ""
+	  "hxprng": ""
   }
 }

@@ -3,12 +3,25 @@
 Cross-platform generation of UUID based on [RFC-4122](https://tools.ietf.org/html/rfc4122) . 
 
 Support for 1, 3, 4 and 5 versions of UUID.
-Port from [node-uuid](https://github.com/kelektiv/node-uuid) and using [PCG32](https://github.com/flashultra/hxprng) for random generator.
+Port from [node-uuid](https://github.com/kelektiv/node-uuid) and using built-in Xorshift128+ for random generator.
 
 Version 3 use Md5 for hash and version 5 use Sha1.
 
-## Installation
-Require [PCG32](https://github.com/flashultra/hxprng) . If you won't want to use it can replace it with ```Std.random(256)``` or any other prng library.
+## Random generator 
+For Uuid.v1() and Uuid.v4() you can pass any random function which return value between 0 and 255 . The default random generator is Xorshift128+ . Here is example for custom random function using Std.random
+```haxe
+public function secureRandom():Int
+{	
+	return Std.random(256);
+}
+
+var uuid = Uuid.v1(secureRandom);
+
+```
+You can use Uuid to get any random number between some range, based on Xorshift128+ RNG, using the following code:
+```haxe
+ var dice:Int = Uuid.randomFromRange(1,6);
+```
 
 ## Usage
 Version 1 (timestamp):

@@ -1,3 +1,5 @@
+package uuid;
+
 import haxe.Timer;
 import haxe.Int64;
 import haxe.io.Bytes;
@@ -9,23 +11,48 @@ class Uuid {
 	inline static var URL = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
 	inline static var ISO_OID = '6ba7b812-9dad-11d1-80b4-00c04fd430c8';
 	inline static var X500_DN = '6ba7b814-9dad-11d1-80b4-00c04fd430c8';
-	
-    static var rng:PCG32 = new PCG32();
-    
+
 	static var lastMSecs:Float = 0;
 	static var lastNSecs = 0;
 	static var clockSequenceBuffer:Int = -1;
 
-	public static function v1(node:Bytes = null, optClockSequence:Int = -1, msecs:Float = -1, optNsecs:Int = -1):String {
+	static var rndSeed:Int = Std.int(Timer.stamp() * 1000);
+	static var state0 = splitmix64_seed(rndSeed);
+	static var state1 = splitmix64_seed(rndSeed + 1);
+
+	private static function splitmix64_seed(index:Int):Int64 {
+		var result:Int64 = (index + Int64.make(0x9E3779B9, 0x7F4A7C15));
+		result = (result ^ (result >> 30)) * Int64.make(0xBF58476D, 0x1CE4E5B9);
+		result = (result ^ (result >> 27)) * Int64.make(0x94D049BB, 0x133111EB);
+		return result ^ (result >> 31);
+	}
+
+	public static function randomFromRange(min:Int, max:Int):Int {
+		var s1:Int64 = state0;
+		var s0:Int64 = state1;
+		state0 = s0;
+		s1 ^= s1 << 23;
+		state1 = s1 ^ s0 ^ (s1 >>> 18) ^ (s0 >>> 5);
+		var result:Int = ((state1 + s0) % (max - min + 1)).low;
+		result = (result < 0) ? -result : result;
+		return result + min;
+	}
+
+	public static function randomByte():Int {
+		return randomFromRange(0, 255);
+	}
+
+	public static function v1(node:Bytes = null, optClockSequence:Int = -1, msecs:Float = -1, optNsecs:Int = -1, ?randomFunc:Void->Int):String {
+		if ( randomFunc == null) randomFunc = randomByte;
 		var buffer:Bytes = Bytes.alloc(16);
 		if (node == null) {
 			node = Bytes.alloc(6);
 			for (i in 0...6)
-				node.set(i, rng.randomFromRange(0, 255));
+				node.set(i, randomFunc());
 			node.set(0, node.get(0) | 0x01);
 		}
 		if (clockSequenceBuffer == -1) {
-			clockSequenceBuffer = (rng.randomFromRange(0, 255) << 8 | rng.randomFromRange(0, 255)) & 0x3fff;
+			clockSequenceBuffer = (randomFunc() << 8 | randomFunc()) & 0x3fff;
 		}
 		var clockSeq = optClockSequence;
 		if (optClockSequence == -1) {
@@ -77,7 +104,7 @@ class Uuid {
 		return uuid;
 	}
 
-	public static function v3(name:String, namespace:String=""):String {
+	public static function v3(name:String, namespace:String = ""):String {
 		namespace = StringTools.replace(namespace, '-', '');
 		var buffer = Md5.make(Bytes.ofHex(namespace + Bytes.ofString(name).toHex()));
 		buffer.set(6, (buffer.get(6) & 0x0f) | 0x30);
@@ -86,10 +113,16 @@ class Uuid {
 		return uuid;
 	}
 
-	public static function v4(randBytes:Bytes = null):String {
-		var buffer:Bytes = Bytes.alloc(16);
-		for (i in 0...16) {
-			buffer.set(i, rng.randomFromRange(0, 255));
+	public static function v4(randBytes:Bytes = null, ?randomFunc:Void->Int):String {
+		if ( randomFunc == null) randomFunc = randomByte;
+		var buffer:Bytes = randBytes;
+		if ( buffer == null ) {
+			buffer = Bytes.alloc(16);
+			for (i in 0...16) {
+				buffer.set(i, randomFunc());
+			}
+		} else {
+			if ( buffer.length < 16) throw "Random bytes should be at least 16 bytes";
 		}
 		buffer.set(6, (buffer.get(6) & 0x0f) | 0x40);
 		buffer.set(8, (buffer.get(8) & 0x3f) | 0x80);
@@ -97,7 +130,7 @@ class Uuid {
 		return uuid;
 	}
 
-	public static function v5(name:String, namespace:String=""):String {
+	public static function v5(name:String, namespace:String = ""):String {
 		namespace = StringTools.replace(namespace, '-', '');
 		var buffer = Sha1.make(Bytes.ofHex(namespace + Bytes.ofString(name).toHex()));
 		buffer.set(6, (buffer.get(6) & 0x0f) | 0x50);

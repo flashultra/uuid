@@ -1,13 +1,11 @@
 {
   "name": "uuid",
+  "url": "https://github.com/flashultra/uuid",
   "license": "MIT",
   "tags": ["cross","haxe","uuid","game"],
   "description": "Cross platform, simple Uuid generation based on RFC4122 . Support versions are v1, v3, v4 and v5",
-  "contributors": ["flashultra"],
-  "releasenote": "Simple Uuid generation for v1, v3, v4 and v5",
-  "version": "1.0.0",
-  "url": "https://github.com/flashultra/uuid",
-  "dependencies": {
-	"hxprng": ""
-  }
+  "version": "2.0.0",
+  "releasenote": "Add build-in random generator Xorshift128+",
+  "contributors": [ "flashultra" ],
+  "classPath": "src"
 }

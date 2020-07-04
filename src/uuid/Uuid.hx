@@ -42,7 +42,7 @@ class Uuid {
 		return randomFromRange(0, 255);
 	}
 
-	public static function v1(node:Bytes = null, optClockSequence:Int = -1, msecs:Float = -1, optNsecs:Int = -1, ?randomFunc:Void->Int):String {
+	public static function v1(node:Bytes = null, optClockSequence:Int = -1, msecs:Float = -1, optNsecs:Int = -1, ?randomFunc:Void->Int, separator:String = "-"):String {
 		if ( randomFunc == null) randomFunc = randomByte;
 		var buffer:Bytes = Bytes.alloc(16);
 		if (node == null) {
@@ -100,20 +100,20 @@ class Uuid {
 		for (i in 0...6)
 			buffer.set(i + 10, node.get(i));
 
-		var uuid = unparse(buffer);
+		var uuid = unparse(buffer,separator);
 		return uuid;
 	}
 
-	public static function v3(name:String, namespace:String = ""):String {
+	public static function v3(name:String, namespace:String = "", separator:String = "-"):String {
 		namespace = StringTools.replace(namespace, '-', '');
 		var buffer = Md5.make(Bytes.ofHex(namespace + Bytes.ofString(name).toHex()));
 		buffer.set(6, (buffer.get(6) & 0x0f) | 0x30);
 		buffer.set(8, (buffer.get(8) & 0x3f) | 0x80);
-		var uuid = unparse(buffer);
+		var uuid = unparse(buffer,separator);
 		return uuid;
 	}
 
-	public static function v4(randBytes:Bytes = null, ?randomFunc:Void->Int):String {
+	public static function v4(randBytes:Bytes = null, ?randomFunc:Void->Int, separator:String = "-"):String {
 		if ( randomFunc == null) randomFunc = randomByte;
 		var buffer:Bytes = randBytes;
 		if ( buffer == null ) {
@@ -126,26 +126,26 @@ class Uuid {
 		}
 		buffer.set(6, (buffer.get(6) & 0x0f) | 0x40);
 		buffer.set(8, (buffer.get(8) & 0x3f) | 0x80);
-		var uuid = unparse(buffer);
+		var uuid = unparse(buffer,separator);
 		return uuid;
 	}
 
-	public static function v5(name:String, namespace:String = ""):String {
+	public static function v5(name:String, namespace:String = "", separator:String = "-"):String {
 		namespace = StringTools.replace(namespace, '-', '');
 		var buffer = Sha1.make(Bytes.ofHex(namespace + Bytes.ofString(name).toHex()));
 		buffer.set(6, (buffer.get(6) & 0x0f) | 0x50);
 		buffer.set(8, (buffer.get(8) & 0x3f) | 0x80);
-		var uuid = unparse(buffer);
+		var uuid = unparse(buffer,separator);
 		return uuid;
 	}
 
-	public static function unparse(data:Bytes):String {
+	public static function unparse(data:Bytes,separator:String = "-"):String {
 		var hex = data.toHex();
-		var uuid = hex.substr(0, 8) + "-" + hex.substr(8, 4) + "-" + hex.substr(12, 4) + "-" + hex.substr(16, 4) + "-" + hex.substr(20, 12);
+		var uuid = hex.substr(0, 8) + separator + hex.substr(8, 4) + separator + hex.substr(12, 4) + separator + hex.substr(16, 4) + separator + hex.substr(20, 12);
 		return uuid;
 	}
 
-	public static function parse(data:String):Bytes {
-		return Bytes.ofHex(StringTools.replace(data, '-', ''));
+	public static function parse(data:String, separator:String = "-"):Bytes {
+		return Bytes.ofHex(StringTools.replace(data, separator, ''));
 	}
 }

@@ -4,8 +4,8 @@
   "license": "MIT",
   "tags": ["cross","haxe","uuid","game"],
   "description": "Cross platform, simple Uuid generation based on RFC4122 . Support versions are v1, v3, v4 and v5",
-  "version": "2.0.0",
-  "releasenote": "Add build-in random generator Xorshift128+",
+  "version": "2.0.1",
+  "releasenote": "Add custom separator",
   "contributors": [ "flashultra" ],
   "classPath": "src"
 }

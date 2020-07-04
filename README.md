@@ -29,6 +29,10 @@ Version 1 (timestamp):
 var uuid = Uuid.v1();
 trace("UUID: " + uuid);
 
+// Using custom separator
+var uuid = Uuid.v1("_");
+trace("UUID: " + uuid);
+
 //Using predefined values
 var node = Bytes.ofHex("010203040506"); // Array of 6 bytes, by default is random generated
 var optClockSequence = 0x1a7f; // clock sequence (0 - 0x3fff)
@@ -51,6 +55,10 @@ trace("UUID: " + uuid);
 Version 4 (random):
 ```haxe
 var uuid = Uuid.v4();
+trace("UUID: " + uuid);
+
+//Using custom separator - empty position
+var uuid = Uuid.v4("");
 trace("UUID: " + uuid);
 ```
 Version 5 (namespace):

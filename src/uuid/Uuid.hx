@@ -7,14 +7,17 @@ import haxe.crypto.Md5;
 import haxe.crypto.Sha1;
 
 class Uuid {
-	inline static var DNS = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
-	inline static var URL = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
-	inline static var ISO_OID = '6ba7b812-9dad-11d1-80b4-00c04fd430c8';
-	inline static var X500_DN = '6ba7b814-9dad-11d1-80b4-00c04fd430c8';
+	public inline static var DNS = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
+	public inline static var URL = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
+	public inline static var ISO_OID = '6ba7b812-9dad-11d1-80b4-00c04fd430c8';
+	public inline static var X500_DN = '6ba7b814-9dad-11d1-80b4-00c04fd430c8';
+	public inline static var NIL = '00000000-0000-0000-0000-000000000000';
+	
 
 	static var lastMSecs:Float = 0;
 	static var lastNSecs = 0;
 	static var clockSequenceBuffer:Int = -1;
+	static var regexp:EReg = ~/^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
 
 	static var rndSeed:Int = Std.int(Timer.stamp() * 1000);
 	static var state0 = splitmix64_seed(rndSeed);
@@ -100,7 +103,7 @@ class Uuid {
 		for (i in 0...6)
 			buffer.set(i + 10, node.get(i));
 
-		var uuid = unparse(buffer,separator);
+		var uuid = stringify(buffer,separator);
 		return uuid;
 	}
 
@@ -109,7 +112,7 @@ class Uuid {
 		var buffer = Md5.make(Bytes.ofHex(namespace + Bytes.ofString(name).toHex()));
 		buffer.set(6, (buffer.get(6) & 0x0f) | 0x30);
 		buffer.set(8, (buffer.get(8) & 0x3f) | 0x80);
-		var uuid = unparse(buffer,separator);
+		var uuid = stringify(buffer,separator);
 		return uuid;
 	}
 
@@ -126,7 +129,7 @@ class Uuid {
 		}
 		buffer.set(6, (buffer.get(6) & 0x0f) | 0x40);
 		buffer.set(8, (buffer.get(8) & 0x3f) | 0x80);
-		var uuid = unparse(buffer,separator);
+		var uuid = stringify(buffer,separator);
 		return uuid;
 	}
 
@@ -135,17 +138,31 @@ class Uuid {
 		var buffer = Sha1.make(Bytes.ofHex(namespace + Bytes.ofString(name).toHex()));
 		buffer.set(6, (buffer.get(6) & 0x0f) | 0x50);
 		buffer.set(8, (buffer.get(8) & 0x3f) | 0x80);
-		var uuid = unparse(buffer,separator);
+		var uuid = stringify(buffer,separator);
 		return uuid;
 	}
 
-	public static function unparse(data:Bytes,separator:String = "-"):String {
+	public static function stringify(data:Bytes,separator:String = "-"):String {
 		var hex = data.toHex();
 		var uuid = hex.substr(0, 8) + separator + hex.substr(8, 4) + separator + hex.substr(12, 4) + separator + hex.substr(16, 4) + separator + hex.substr(20, 12);
 		return uuid;
 	}
 
-	public static function parse(data:String, separator:String = "-"):Bytes {
-		return Bytes.ofHex(StringTools.replace(data, separator, ''));
+	public static function parse(uuid:String, separator:String = "-"):Bytes {
+		return Bytes.ofHex(StringTools.replace(uuid, separator, ''));
+	}
+	
+	public static function validate(uuid:String,separator:String = "-"):Bool {
+		if ( separator == "") {
+		  uuid = uuid.substr(0, 8) + "-" + uuid.substr(8, 4) + "-" + uuid.substr(12, 4) + "-" + uuid.substr(16, 4) + "-" + uuid.substr(20, 12);
+		} else if ( separator != "-") {
+		  uuid = StringTools.replace(uuid, separator, '-');
+		}
+		return regexp.match(uuid);
+	}
+	
+	public static function version(uuid:String,separator:String = "-"):Int {
+		uuid = StringTools.replace(uuid, separator, '');
+		return Std.parseInt("0x"+uuid.substr(12,1));
 	}
 }

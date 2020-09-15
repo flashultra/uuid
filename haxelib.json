@@ -4,8 +4,8 @@
   "license": "MIT",
   "tags": ["cross","haxe","uuid","game"],
   "description": "Cross platform, simple Uuid generation based on RFC4122 . Support versions are v1, v3, v4 and v5",
-  "version": "2.0.1",
-  "releasenote": "Add custom separator",
+  "version": "2.1.0",
+  "releasenote": "Add NIL,validate and version methods. Rename unparse to stringify",
   "contributors": [ "flashultra" ],
   "classPath": "src"
 }

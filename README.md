@@ -23,25 +23,37 @@ You can use Uuid to get any random number between some range, based on Xorshift1
  var dice:Int = Uuid.randomFromRange(1,6);
 ```
 ## API
+
 **Uuid.NIL**
+
 The nil UUID string (all zeros).
 
 Example:
  trace("Uuid:" +Uuid.NIL); //  '00000000-0000-0000-0000-000000000000'
 
-**Uuid.parse(uuid:String, separator:String = "-"):Bytes**
-Convert UUID string to Bytes
 
-**Uuid.stringify(data:Bytes,separator:String = "-"):String**
+**Uuid.parse(uuid, ?separator):Bytes**
+
+ Convert UUID string to Bytes
+
+
+**Uuid.stringify(data, ?separator):String**
+
 Convert Bytes to UUID string using separtor
 
-**Uuid.validate(uuid:String,separator:String = "-"):Bool**
+
+**Uuid.validate(uuid, ?separator):Bool**
+
 Test a string to see if it is a valid UUID
 
-**Uuid.version(uuid:String,separator:String = "-"):Int**
+
+**Uuid.version(uuid, ?separator):Int**
+
 Detect RFC version of a UUID
 
-**Uuid.randomFromRange(min:Int, max:Int):Int**
+
+**Uuid.randomFromRange(min, max):Int**
+
 Return random number between min and max (included)
 
 ## Usage

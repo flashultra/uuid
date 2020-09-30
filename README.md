@@ -26,10 +26,10 @@ You can use Uuid to get any random number between some range, based on Xorshift1
 
 |  |  |  
 | --- | --- |
-| [`Uuid.v1()`](#uuidv1) | Create a version 1 (timestamp) UUID | 
-| [`Uuid.v3()`](#uuidv3) | Create a version 3 (namespace with MD5) UUID | 
-| [`Uuid.v4()`](#uuidv4) | Create a version 4 (random) UUID | 
-| [`Uuid.v5()`](#uuidv5) | Create a version 5 (namespace with SHA-1) UUID | 
+| [`Uuid.v1()`](#uuidv1node-optclocksequence-msecs-optnsecs-randomfunc-separator-shortuuid-toalphabetstring) | Create a version 1 (timestamp) UUID | 
+| [`Uuid.v3()`](#uuidv3name-namespaceseparatorshortuuidtoalphabetstring) | Create a version 3 (namespace with MD5) UUID | 
+| [`Uuid.v4()`](#uuidv4randbytesrandomfuncseparatorshortuuidtoalphabetstring) | Create a version 4 (random) UUID | 
+| [`Uuid.v5()`](#uuidv5name-namespaceseparatorshortuuidtoalphabetstring) | Create a version 5 (namespace with SHA-1) UUID | 
 | [`Uuid.NIL`](#uuidnil) | The nil UUID string (all zeros)  |
 | [`Uuid.parse()`](#uuidparseuuid-separatorbytes) | Convert UUID string to bytes | 
 | [`Uuid.stringify()`](#uuidstringifydata-separatorstring) | Convert bytes to UUID string |

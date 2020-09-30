@@ -26,7 +26,7 @@ You can use Uuid to get any random number between some range, based on Xorshift1
 
 |  |  |  
 | --- | --- |
-| [`Uuid.nanoId()`](#uuidnanoid) | Create a tiny, secure, URL-friendly, unique string ID |
+| [`Uuid.nanoId()`](#uuidnanoidlen-alphabet-randomfunc-string) | Create a tiny, secure, URL-friendly, unique string ID |
 | [`Uuid.v1()`](#uuidv1node-optclocksequence-msecs-optnsecs-randomfunc-separator-shortuuid-toalphabetstring) | Create a version 1 (timestamp) UUID | 
 | [`Uuid.v3()`](#uuidv3name-namespaceseparatorshortuuidtoalphabetstring) | Create a version 3 (namespace with MD5) UUID | 
 | [`Uuid.v4()`](#uuidv4randbytesrandomfuncseparatorshortuuidtoalphabetstring) | Create a version 4 (random) UUID | 

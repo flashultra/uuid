@@ -2,10 +2,10 @@
   "name": "uuid",
   "url": "https://github.com/flashultra/uuid",
   "license": "MIT",
-  "tags": ["cross","haxe","uuid","game","binary"],
-  "description": "Cross platform, simple Uuid generation based on RFC4122 . Support versions are v1, v3, v4 and v5",
-  "version": "2.2.0",
-  "releasenote": "Add functions to translate standard UUIDs into shorter fromat and back. Add convert(..) to translate from one alphabet to another",
+  "tags": ["cross","haxe","uuid","game","binary","nanoid"],
+  "description": "Cross platform, simple NanoId and Uuid generation based on RFC4122 . Support versions are v1, v3, v4 and v5",
+  "version": "2.3.0",
+  "releasenote": "Add nanoId support",
   "contributors": [ "flashultra" ],
   "classPath": "src"
 }

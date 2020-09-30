@@ -26,6 +26,7 @@ You can use Uuid to get any random number between some range, based on Xorshift1
 
 |  |  |  
 | --- | --- |
+| [`Uuid.nanoId()`](#uuidnanoid) | Create a tiny, secure, URL-friendly, unique string ID |
 | [`Uuid.v1()`](#uuidv1node-optclocksequence-msecs-optnsecs-randomfunc-separator-shortuuid-toalphabetstring) | Create a version 1 (timestamp) UUID | 
 | [`Uuid.v3()`](#uuidv3name-namespaceseparatorshortuuidtoalphabetstring) | Create a version 3 (namespace with MD5) UUID | 
 | [`Uuid.v4()`](#uuidv4randbytesrandomfuncseparatorshortuuidtoalphabetstring) | Create a version 4 (random) UUID | 
@@ -55,12 +56,33 @@ You can use Uuid to get any random number between some range, based on Xorshift1
 | `Uuid.FLICKR_BASE58` | Avoid similar characters 0/O, 1/I/l | 
 | `Uuid.BASE_70` | Numbers, English letters and special character | 
 | `Uuid.COOKIE_BASE90` | Safe for HTTP cookies values  | 
+| `Uuid.NANO_ID_ALPHABET` | Alphabet used to create NanoId string  | 
 | `Uuid.NUMBERS_BIN` | Binary numbers | 
 | `Uuid.NUMBERS_OCT` | Octal numbers | 
 | `Uuid.NUMBERS_DEC` | Decimal numbers | 
 | `Uuid.NUMBERS_HEX` | Hex numbers | 
 
 ## API
+
+### Uuid.nanoId(len, alphabet, randomFunc ):String
+
+Create unique string ID
+
+ NanoId is 40% faster than UUID and uses a larger alphabet than UUID (A-Za-z0-9_-), so default size is reduced from 36 to 21 symbols.
+ It is comparable to UUID v4.
+
+|                |                                                                              |
+| -------------- | ---------------------------------------------------------------------------- |
+| `len`          | `Int` Size of the NanoId string ( default is `21`)                           |
+| `alphabet`     | `String` Alphabet used to generate NanoId	                                |
+| `randomFunc`   | `Void->Int` Any random function that returns a random bytes (0-255)          |
+| _returns_      | `String`                                                                     |
+
+Example:
+
+```haxe
+trace("Uuid: "+Uuid.nanoId()); // 6OxUkLI4bGmR_JlVMX9fQ
+```
 
 ### Uuid.NIL
 

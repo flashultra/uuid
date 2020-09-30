@@ -20,6 +20,7 @@ class Uuid {
 	public inline static var FLICKR_BASE58 = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";  // without similar characters 0/O, 1/I/l
 	public inline static var BASE_70 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-+!@#$^";
 	public inline static var COOKIE_BASE90 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'()*+-./:<=>?@[]^_`{|}~";
+	public inline static var NANO_ID_ALPHABET = "_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	
 	public inline static var NUMBERS_BIN = "01";
 	public inline static var NUMBERS_OCT = "01234567";
@@ -223,5 +224,26 @@ class Uuid {
         } while (newlen !=0 );
 
         return buf;
-     }
+	 }
+	 
+	 public static function nanoId(len:Int=21,alphabet:String=NANO_ID_ALPHABET,?randomFunc:Void->Int):String {
+		if ( randomFunc == null ) randomFunc = randomByte;
+		if ( alphabet == null ) throw "Alphabet cannot be null";
+		if ( alphabet.length == 0 || alphabet.length >= 256 ) throw "Alphabet must contain between 1 and 255 symbols";
+		if ( len <= 0 ) throw "Length must be greater than zero";
+		var mask:Int = (2 <<  Math.floor(Math.log(alphabet.length - 1) / Math.log(2))) - 1;
+		var step:Int =  Math.ceil(1.6 * mask * len / alphabet.length);
+		var sb = new StringBuf();
+		while (sb.length != len) {
+			for(i in 0...step) {
+				var rnd = randomFunc();
+				var aIndex:Int = rnd & mask;
+				if (aIndex < alphabet.length) {
+                    sb.add(alphabet.charAt(aIndex));
+                    if (sb.length == len) break;
+                }
+			}
+		}
+		return sb.toString();
+	 }
 }

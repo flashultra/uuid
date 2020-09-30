@@ -31,15 +31,15 @@ You can use Uuid to get any random number between some range, based on Xorshift1
 | [`Uuid.v4()`](#uuidv4) | Create a version 4 (random) UUID | 
 | [`Uuid.v5()`](#uuidv5) | Create a version 5 (namespace with SHA-1) UUID | 
 | [`Uuid.NIL`](#uuidnil) | The nil UUID string (all zeros)  |
-| [`Uuid.parse()`](#uuidparses) | Convert UUID string to bytes | 
-| [`Uuid.stringify()`](#uuidstringify) | Convert bytes to UUID string |
-| [`Uuid.randomFromRange()`](#uuidrandom) | Return random number between range |
-| [`Uuid.randomByte()`](#uuidrandombyte) | Return random value between 0 and 255 (included) | 
-| [`Uuid.fromShort()`](#uuidfromshort) | Convert short uuid to Uuid based on the alphabet | 
-| [`Uuid.toShort()`](#uuidtoshort) | Convert Uuid to short uuid based on the alphabet  | 
-| [`Uuid.convert()`](#uuidconvert) | Convert any string from one alphabet to another | 
-| [`Uuid.validate()`](#uuidvalidate) | Test a string to see if it is a valid UUID |
-| [`Uuid.version()`](#uuidversion) | Detect RFC version of a UUID |
+| [`Uuid.parse()`](#uuidparseuuid-separatorbytes) | Convert UUID string to bytes | 
+| [`Uuid.stringify()`](#uuidstringifydata-separatorstring) | Convert bytes to UUID string |
+| [`Uuid.randomFromRange()`](#uuidrandomfromrangemin-maxint) | Return random number between range |
+| [`Uuid.randomByte()`](#uuidrandombyteint) | Return random value between 0 and 255 (included) | 
+| [`Uuid.fromShort()`](#uuidfromshortshortuuid-separatorfromalphabetstring) | Convert short uuid to Uuid based on the alphabet | 
+| [`Uuid.toShort()`](#uuidtoshortuuid-separatortoalphabetstring) | Convert Uuid to short uuid based on the alphabet  | 
+| [`Uuid.convert()`](#uuidconvertnumber-fromalphabettoalphabetstring) | Convert any string from one alphabet to another | 
+| [`Uuid.validate()`](#uuidvalidateuuid-separatorbool) | Test a string to see if it is a valid UUID |
+| [`Uuid.version()`](#uuidversionuuid-separatorint) | Detect RFC version of a UUID |
 
 ## API Constants
 
@@ -187,7 +187,7 @@ Translate shorter  UUID format to standard UUID
 | `fromAlphabet`     | `String` Alphabet to use for translation ( default `FLICKR_BASE58`)                               |
 | _returns_ | `String`     |
 
-Note: Alphabets can be a custom ones or one of predefined : `COOKIE_BASE90` , `FLICKR_BASE58` , `BASE_70` , `LOWERCASE_BASE26` , `UPPERCASE_BASE26`, `NO_LOOK_ALIKES_BASE51` , `NUMBERS_BIN` , `NUMBERS_OCT` , `NUMBERS_DEC` , `NUMBERS_HEX`
+&#x26a0;&#xfe0f; Note: Alphabets can be a custom ones or one of predefined : `COOKIE_BASE90` , `FLICKR_BASE58` , `BASE_70` , `LOWERCASE_BASE26` , `UPPERCASE_BASE26`, `NO_LOOK_ALIKES_BASE51` , `NUMBERS_BIN` , `NUMBERS_OCT` , `NUMBERS_DEC` , `NUMBERS_HEX`
 
 Example:
 
@@ -207,7 +207,7 @@ Translate standard UUIDs into shorter  format
 | `toAlphabet`     | `String` Alphabet to use for translation ( default `FLICKR_BASE58`)                               |
 | _returns_ | `String`     |
 
-Note: Alphabets can be a custom ones or one of predefined : `COOKIE_BASE90` , `FLICKR_BASE58` , `BASE_70` , `LOWERCASE_BASE26` , `UPPERCASE_BASE26`, `NO_LOOK_ALIKES_BASE51` , `NUMBERS_BIN` , `NUMBERS_OCT` , `NUMBERS_DEC` , `NUMBERS_HEX`
+&#x26a0;&#xfe0f; Note: Alphabets can be a custom ones or one of predefined : `COOKIE_BASE90` , `FLICKR_BASE58` , `BASE_70` , `LOWERCASE_BASE26` , `UPPERCASE_BASE26`, `NO_LOOK_ALIKES_BASE51` , `NUMBERS_BIN` , `NUMBERS_OCT` , `NUMBERS_DEC` , `NUMBERS_HEX`
 
 Example:
 
@@ -232,6 +232,105 @@ Example:
 Uuid.convert('12345',Uuid.NUMBERS_DEC,Uuid.NUMBERS_BIN); // 11000000111001
 Uuid.convert('12345678',Uuid.NUMBERS_DEC,Uuid.NUMBERS_HEX);  // ⇨ bc614e
 Uuid.convert('1234567890',Uuid.NUMBERS_DEC,Uuid.BASE_70);  //  ⇨ PtmIa
+```
+
+### Uuid.v1(node, optClockSequence, msecs, optNsecs, randomFunc, separator, shortUuid, toAlphabet):String
+
+Create an RFC version 1 (timestamp) UUID
+
+|  |  |
+| --- | --- |
+| `node`  |  `Bytes` RFC "node" field as 6 bytes  |
+| `optClockSequence` | RFC "clock sequence" as a `Int` between 0 - 0x3fff |
+| `msecs` | RFC "timestamp" field (`Float` of milliseconds, unix epoch) |
+| `optNsecs` | RFC "timestamp" field (`Int` of nanseconds to add to `msecs`, should be 0-10,000) |
+| `randomFunc` | `Void->Int` Any random function that returns a random bytes (0-255) |
+| `separator` | `String` Set divider ( default is `-`)|
+| `shortUuid` | `Bool` If `true` UUID will be exported as short UUID |
+| `toAlphabet`| `String` Alphabet used for export on short UUID |
+| _returns_ | UUID `String`  |
+| _throws_ | `Error` if more than 10M UUIDs/sec are requested |
+
+
+Example:
+
+```haxe
+Uuid.v1(); // ⇨ '2c5ea4c0-4067-11e9-8bad-9b1deb4d3b7d'
+```
+
+Example using  with options:
+
+```haxe
+var node = Bytes.ofHex("010207090506");
+var optClockSequence = 0x1a7f;
+var msecs = 1556526368; 
+var optNsecs = 6200; 
+uuid = Uuid.v1(node,optClockSequence,msecs,optNsecs); // ⇨ '25848a38-1cd0-11b2-9a7f-010207090506'
+```
+
+### Uuid.v3(name, namespace,separator,shortUuid,toAlphabet):String
+
+Create an RFC version 3 (namespace w/ MD5) UUID
+
+API is identical to `v5()`, but uses "v3" instead.
+
+&#x26a0;&#xfe0f; Note: Per the RFC, "_If backward compatibility is not an issue, SHA-1 [Version 5] is preferred_."
+
+### Uuid.v4(randBytes,randomFunc,separator,shortUuid,toAlphabet):String
+
+Create an RFC version 4 (random) UUID
+
+|  |  |
+| --- | --- |
+| `randBytes`| `Bytes` 16 random bytes (0-255) |
+| `randomFunc` | `Void->Int` Any random function that returns a random bytes (0-255) |
+| `separator` | `String` Set divider ( default is `-`)|
+| `shortUuid` | `Bool` If `true` UUID will be exported as short UUID |
+| `toAlphabet`| `String` Alphabet used for export on short UUID |
+| _returns_ | UUID `String` |
+
+Example:
+
+```haxe
+Uuid.v4(); // ⇨ '1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed'
+```
+
+Example using predefined `random` values:
+
+```haxe
+var randomValues= Bytes.ofHex("109156bec4fbc1ea71b4efe1671c5836");
+Uuid.v4(randomValues); // ⇨ '109156be-c4fb-41ea-b1b4-efe1671c5836'
+```
+
+### Uuid.v5(name, namespace,separator,shortUuid,toAlphabet):String
+
+Create an RFC version 5 (namespace w/ SHA-1) UUID
+
+|  |  |
+| --- | --- |
+| `name` | `String` |
+| `namespace` | `String` Namespace UUID |
+| `separator` | `String` Set divider ( default is `-`)|
+| `shortUuid` | `Bool` If `true` UUID will be exported as short UUID |
+| `toAlphabet`| `String` Alphabet used for export on short UUID |
+| _returns_ | UUID `String` if no `buffer` is specified, otherwise returns `buffer` |
+
+Note: The RFC `DNS` and `URL` namespaces are available as `Uuid.DNS` and `Uuid.URL`.
+
+Example with custom namespace:
+
+```haxe
+// Define a custom namespace.  Readers, create your own using something like
+// https://www.uuidgenerator.net/
+var MY_NAMESPACE = '1b671a64-40d5-491e-99b0-da01ff1f3341';
+
+Uuid.v5('Hello, World!', MY_NAMESPACE); // ⇨ '630eb68f-e0fa-5ecc-887a-7c7a62614681'
+```
+
+Example with RFC `URL` namespace:
+
+```haxe
+Uuid.v5('https://www.w3.org/', Uuid.URL); // ⇨ 'c106a26a-21bb-5538-8bf2-57095d1976c1'
 ```
 
 ## Usage

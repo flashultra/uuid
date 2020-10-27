@@ -69,6 +69,16 @@ class Uuid {
 		return  Uuid.convert(uuid,NUMBERS_HEX,toAlphabet);
 	}
 
+	public static function fromNano(nanoUuid:String, separator:String = '-', fromAlphabet:String = NANO_ID_ALPHABET):String {
+		var uuid  = Uuid.convert(nanoUuid,fromAlphabet,NUMBERS_HEX);
+		return hexToUuid(uuid,separator);
+	}
+
+	public static function toNano(uuid:String, separator:String = '-',toAlphabet:String = NANO_ID_ALPHABET):String {
+		uuid = StringTools.replace(uuid, separator, '').toLowerCase();
+		return  Uuid.convert(uuid,NUMBERS_HEX,toAlphabet);
+	}
+
 	public static function v1(node:Bytes = null, optClockSequence:Int = -1, msecs:Float = -1, optNsecs:Int = -1, ?randomFunc:Void->Int, separator:String = "-", shortUuid:Bool = false, toAlphabet:String = FLICKR_BASE58):String {
 		if ( randomFunc == null) randomFunc = randomByte;
 		var buffer:Bytes = Bytes.alloc(16);
@@ -245,5 +255,9 @@ class Uuid {
 			}
 		}
 		return sb.toString();
+	 }
+
+	 public static function short(toAlphabet:String = FLICKR_BASE58, ?randomFunc:Void->Int):String {
+		return Uuid.v4(randomFunc,true,toAlphabet);
 	 }
 }

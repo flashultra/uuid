@@ -7,6 +7,41 @@ Port from [node-uuid](https://github.com/kelektiv/node-uuid) and using built-in 
 
 Version 3 use Md5 for hash and version 5 use Sha1.
 
+# short-uuid
+
+Generate and translate standard UUIDs into shorter - or just different - formats and back ( [based on short-uuid](https://github.com/oculus42/short-uuid) ). 
+
+It also provides translators to convert back and forth from RFC compliant UUIDs to the shorter formats.
+
+# nanoid
+
+A tiny, secure, URL-friendly, unique string ID generator ( [based on nanoid](https://github.com/ai/nanoid) ). 
+
+* **Small.** 108 bytes (minified and gzipped).  [Size Limit] controls the size.
+* **Fast.** It is 40% faster than UUID.
+* **Safe.** It uses Xorshift128+ RNG and can use any cryptographically strong RNG.
+* **Compact.** It uses a larger alphabet than UUID (`A-Za-z0-9_-`).   So ID size was reduced from 36 to 21 symbols.
+* **Portable.** Nano ID was ported  to many programming languages.
+
+## Convert from/to one type to another 
+Here is an example of usage, where we store ```nanoId``` in the database ( it's much more compact) , but it is shown to the user as ```uuid``` , for readability and security reasons.
+
+```haxe
+var uniqueId = Uuid.nanoId(); // Generate unique id and store in database
+var uuid = Uuid.fromNano(uniqueId); // Convert NanoId to Uuid and show on user screen
+var searchUid = Uuid.toNano(uuid); // Server receive uuid and convert to NanoId. Use nanoId to search in database.
+
+var shortUuid = Uuid.short();
+var uuid = Uuid.fromShort(shortUuid);
+```
+Convert from any base to another base ( binary, hex, decimal, octal and many others) . 
+```haxe
+var vBinary = Uuid.convert("273247893827239437",Uuid.NUMBERS_DEC,Uuid.NUMBERS_BIN); //convert decimal to binary format
+var vHex = Uuid.convert(vBinary, Uuid.NUMBERS_BIN, Uuid.NUMBERS_HEX); //convert bunary to hex format
+var vBase58 = Uuid.convert(vHex,  Uuid.NUMBERS_HEX, Uuid.FLICKR_BASE58); // convert hex to Base58 format 
+var vOctal = Uuid.convert(vBase58, Uuid.FLICKR_BASE58, Uuid.NUMBERS_OCT ); // convert from Base58 to octal format 
+```
+
 ## Random generator 
 For Uuid.v1() and Uuid.v4() you can pass any random function which return value between 0 and 255 . The default random generator is Xorshift128+ . Here is example for custom random function using Std.random
 ```haxe
@@ -27,6 +62,7 @@ You can use Uuid to get any random number between some range, based on Xorshift1
 |  |  |  
 | --- | --- |
 | [`Uuid.nanoId()`](#uuidnanoidlen-alphabet-randomfunc-string) | Create a tiny, secure, URL-friendly, unique string ID |
+| [`Uuid.short()`](#uuidshorttoalphabet-randomfunc-string) | Generate shorter UUIDs based on v4  |
 | [`Uuid.v1()`](#uuidv1node-optclocksequence-msecs-optnsecs-randomfunc-separator-shortuuid-toalphabetstring) | Create a version 1 (timestamp) UUID | 
 | [`Uuid.v3()`](#uuidv3name-namespaceseparatorshortuuidtoalphabetstring) | Create a version 3 (namespace with MD5) UUID | 
 | [`Uuid.v4()`](#uuidv4randbytesrandomfuncseparatorshortuuidtoalphabetstring) | Create a version 4 (random) UUID | 
@@ -38,6 +74,8 @@ You can use Uuid to get any random number between some range, based on Xorshift1
 | [`Uuid.randomByte()`](#uuidrandombyteint) | Return random value between 0 and 255 (included) | 
 | [`Uuid.fromShort()`](#uuidfromshortshortuuid-separatorfromalphabetstring) | Convert short uuid to Uuid based on the alphabet | 
 | [`Uuid.toShort()`](#uuidtoshortuuid-separatortoalphabetstring) | Convert Uuid to short uuid based on the alphabet  | 
+| [`Uuid.fromNano()`](#uuidfromnanonanouuid-separatorfromalphabetstring) | Convert nanoId to Uuid | 
+| [`Uuid.toNano()`](#uuidtonanouuid-separatortoalphabetstring) | Convert Uuid to nanoId  | 
 | [`Uuid.convert()`](#uuidconvertnumber-fromalphabettoalphabetstring) | Convert any string from one alphabet to another | 
 | [`Uuid.validate()`](#uuidvalidateuuid-separatorbool) | Test a string to see if it is a valid UUID |
 | [`Uuid.version()`](#uuidversionuuid-separatorint) | Detect RFC version of a UUID |
@@ -84,6 +122,23 @@ Example:
 trace("Uuid: "+Uuid.nanoId()); // 6OxUkLI4bGmR_JlVMX9fQ
 ```
 
+### Uuid.short(toAlphabet, randomFunc ):String
+
+Create shorter version for UUID based UUID v4. 
+
+
+|                |                                                                              |
+| -------------- | ---------------------------------------------------------------------------- |
+| `toAlphabet`   | `String` Alphabet used to generate short-uuid	                                |
+| `randomFunc`   | `Void->Int` Any random function that returns a random bytes (0-255)          |
+| _returns_      | `String`                                                                     |
+
+Example:
+
+```haxe
+trace("Uuid: "+Uuid.short()); // mhvXdrZT4jP5T8vBxuvm75
+```
+
 ### Uuid.NIL
 
 The nil UUID string (all zeros).
@@ -96,12 +151,12 @@ Example:
 ### Uuid.parse(uuid, separator):Bytes
 
  Convert UUID string to Bytes
-|           |                                          |
-| ------------- | ---------------------------------------- |
-| `uuid`        | `String` A valid UUID                    |
-| `separator`   | `String` Set different divider ( default is `-`)                 |
-| _returns_     | `Bytes`                         |
-  
+|                |                                                                              |
+| -------------- | ---------------------------------------------------------------------------- |
+| `uuid`          | `String` A valid UUID |
+| `separator`     | `String` Set different divider ( default is `-`)                                   |
+| _returns_      | `Bytes`                                                                     |
+
 Example:
 ```haxe
 // Parse a UUID
@@ -204,7 +259,7 @@ Uuid.randomByte(); // return a number in range [0,255]
 Translate shorter  UUID format to standard UUID
 |           |                                          |
 | --------- | ---------------------------------------- |
-| `shortUuid`     | `String` A valid UUID                  |
+| `shortUuid`     | `String` short uuid string                    |
 | `separator`     | `String` Set divider ( default is `-`)                               |
 | `fromAlphabet`     | `String` Alphabet to use for translation ( default `FLICKR_BASE58`)                               |
 | _returns_ | `String`     |
@@ -224,7 +279,46 @@ Translate standard UUIDs into shorter  format
 
 |           |                                          |
 | --------- | ---------------------------------------- |
-| `uuid`     | `String` short uuid string                   |
+| `uuid`     | `String` A valid UUID                  |
+| `separator`     | `String` Set divider ( default is `-`)                               |
+| `toAlphabet`     | `String` Alphabet to use for translation ( default `FLICKR_BASE58`)                               |
+| _returns_ | `String`     |
+
+&#x26a0;&#xfe0f; Note: Alphabets can be a custom ones or one of predefined : `COOKIE_BASE90` , `FLICKR_BASE58` , `BASE_70` , `LOWERCASE_BASE26` , `UPPERCASE_BASE26`, `NO_LOOK_ALIKES_BASE51` , `NUMBERS_BIN` , `NUMBERS_OCT` , `NUMBERS_DEC` , `NUMBERS_HEX`
+
+Example:
+
+```haxe
+Uuid.toShort('6ae99955-2a0d-5dca-94d6-2e2bc8b764d3'); // ecHyJhpvZANyZY6k1L5EYK
+```
+
+
+### Uuid.fromNano(nanoUuid, separator,fromAlphabet):String
+
+Translate shorter  UUID format to standard UUID
+|           |                                          |
+| --------- | ---------------------------------------- |
+| `nanoUuid`     | `String` A valid nanoId string                  |
+| `separator`     | `String` Set divider ( default is `-`)                               |
+| `fromAlphabet`     | `String` Alphabet to use for translation ( default `FLICKR_BASE58`)                               |
+| _returns_ | `String`     |
+
+&#x26a0;&#xfe0f; Note: Alphabets can be a custom ones or one of predefined : `COOKIE_BASE90` , `FLICKR_BASE58` , `BASE_70` , `LOWERCASE_BASE26` , `UPPERCASE_BASE26`, `NO_LOOK_ALIKES_BASE51` , `NUMBERS_BIN` , `NUMBERS_OCT` , `NUMBERS_DEC` , `NUMBERS_HEX`
+
+Example:
+
+```haxe
+Uuid.fromShort("ecHyJhpvZANyZY6k1L5EYK"); // 6ae99955-2a0d-5dca-94d6-2e2bc8b764d3
+```
+
+
+### Uuid.toNano(uuid, separator,toAlphabet):String
+
+Translate standard UUIDs into shorter  format
+
+|           |                                          |
+| --------- | ---------------------------------------- |
+| `uuid`     | `String` A valid UUID                   |
 | `separator`     | `String` Set divider ( default is `-`)                               |
 | `toAlphabet`     | `String` Alphabet to use for translation ( default `FLICKR_BASE58`)                               |
 | _returns_ | `String`     |

@@ -19,6 +19,7 @@ class Uuid {
 	public inline static var NO_LOOK_ALIKES_BASE51 = "2346789ABCDEFGHJKLMNPQRTUVWXYZabcdefghijkmnpqrtwxyz"; // without 1, l, I, 0, O, o, u, v, 5, S, s
 	public inline static var FLICKR_BASE58 = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";  // without similar characters 0/O, 1/I/l
 	public inline static var BASE_70 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-+!@#$^";
+	public inline static var BASE_85 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-:+=^!/*?&<>()[]{}@%$#";
 	public inline static var COOKIE_BASE90 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'()*+-./:<=>?@[]^_`{|}~";
 	public inline static var NANO_ID_ALPHABET = "_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	
@@ -33,11 +34,11 @@ class Uuid {
 	static var clockSequenceBuffer:Int = -1;
 	static var regexp:EReg = ~/^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
 	
-	static var rndSeed:Int = Std.int(Timer.stamp() * 1000);
+	static var rndSeed:Int64 = Int64.fromFloat(Timer.stamp() * 1000);
 	static var state0 = splitmix64_seed(rndSeed);
 	static var state1 = splitmix64_seed(rndSeed + 1);
 
-	private static function splitmix64_seed(index:Int):Int64 {
+	private static function splitmix64_seed(index:Int64):Int64 {
 		var result:Int64 = (index + Int64.make(0x9E3779B9, 0x7F4A7C15));
 		result = (result ^ (result >> 30)) * Int64.make(0xBF58476D, 0x1CE4E5B9);
 		result = (result ^ (result >> 27)) * Int64.make(0x94D049BB, 0x133111EB);

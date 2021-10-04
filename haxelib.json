@@ -4,8 +4,8 @@
   "license": "MIT",
   "tags": ["cross","haxe","uuid","game","binary","nanoid","short-uuid"],
   "description": "Cross platform, simple Uuid , Short-Uuid and NanoId generator. Uuid generation is based on RFC4122 . Support versions are v1, v3, v4 and v5",
-  "version": "2.3.1",
-  "releasenote": "Add from/to support for NanoId conversion",
+  "version": "2.3.2",
+  "releasenote": "Fix overflow bug with seed value",
   "contributors": [ "flashultra" ],
   "classPath": "src"
 }

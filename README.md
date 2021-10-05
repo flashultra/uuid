@@ -265,7 +265,7 @@ Translate shorter  UUID format to standard UUID
 | `fromAlphabet`     | `String` Alphabet to use for translation ( default `FLICKR_BASE58`)                               |
 | _returns_ | `String`     |
 
-&#x26a0;&#xfe0f; Note: Alphabets can be a custom ones or one of predefined : `COOKIE_BASE90` , `FLICKR_BASE58` , `BASE_70` , `LOWERCASE_BASE26` , `UPPERCASE_BASE26`, `NO_LOOK_ALIKES_BASE51` , `NUMBERS_BIN` , `NUMBERS_OCT` , `NUMBERS_DEC` , `NUMBERS_HEX`
+&#x26a0;&#xfe0f; Note: Alphabets can be a custom ones or one of predefined : `COOKIE_BASE90` , `FLICKR_BASE58` , `BASE_70` , `BASE_85` , `LOWERCASE_BASE26` , `UPPERCASE_BASE26`, `NO_LOOK_ALIKES_BASE51` , `NUMBERS_BIN` , `NUMBERS_OCT` , `NUMBERS_DEC` , `NUMBERS_HEX`
 
 Example:
 
@@ -285,7 +285,7 @@ Translate standard UUIDs into shorter  format
 | `toAlphabet`     | `String` Alphabet to use for translation ( default `FLICKR_BASE58`)                               |
 | _returns_ | `String`     |
 
-&#x26a0;&#xfe0f; Note: Alphabets can be a custom ones or one of predefined : `COOKIE_BASE90` , `FLICKR_BASE58` , `BASE_70` , `LOWERCASE_BASE26` , `UPPERCASE_BASE26`, `NO_LOOK_ALIKES_BASE51` , `NUMBERS_BIN` , `NUMBERS_OCT` , `NUMBERS_DEC` , `NUMBERS_HEX`
+&#x26a0;&#xfe0f; Note: Alphabets can be a custom ones or one of predefined : `COOKIE_BASE90` , `FLICKR_BASE58` , `BASE_70` , `BASE_85` , `LOWERCASE_BASE26` , `UPPERCASE_BASE26`, `NO_LOOK_ALIKES_BASE51` , `NUMBERS_BIN` , `NUMBERS_OCT` , `NUMBERS_DEC` , `NUMBERS_HEX`
 
 Example:
 
@@ -304,7 +304,7 @@ Translate shorter  UUID format to standard UUID
 | `fromAlphabet`     | `String` Alphabet to use for translation ( default `FLICKR_BASE58`)                               |
 | _returns_ | `String`     |
 
-&#x26a0;&#xfe0f; Note: Alphabets can be a custom ones or one of predefined : `COOKIE_BASE90` , `FLICKR_BASE58` , `BASE_70` , `LOWERCASE_BASE26` , `UPPERCASE_BASE26`, `NO_LOOK_ALIKES_BASE51` , `NUMBERS_BIN` , `NUMBERS_OCT` , `NUMBERS_DEC` , `NUMBERS_HEX`
+&#x26a0;&#xfe0f; Note: Alphabets can be a custom ones or one of predefined : `COOKIE_BASE90` , `FLICKR_BASE58` , `BASE_70` , `BASE_85` , `LOWERCASE_BASE26` , `UPPERCASE_BASE26`, `NO_LOOK_ALIKES_BASE51` , `NUMBERS_BIN` , `NUMBERS_OCT` , `NUMBERS_DEC` , `NUMBERS_HEX`
 
 Example:
 
@@ -324,7 +324,7 @@ Translate standard UUIDs into shorter  format
 | `toAlphabet`     | `String` Alphabet to use for translation ( default `FLICKR_BASE58`)                               |
 | _returns_ | `String`     |
 
-&#x26a0;&#xfe0f; Note: Alphabets can be a custom ones or one of predefined : `COOKIE_BASE90` , `FLICKR_BASE58` , `BASE_70` , `LOWERCASE_BASE26` , `UPPERCASE_BASE26`, `NO_LOOK_ALIKES_BASE51` , `NUMBERS_BIN` , `NUMBERS_OCT` , `NUMBERS_DEC` , `NUMBERS_HEX`
+&#x26a0;&#xfe0f; Note: Alphabets can be a custom ones or one of predefined : `COOKIE_BASE90` , `FLICKR_BASE58` , `BASE_70` , `BASE_85` , `LOWERCASE_BASE26` , `UPPERCASE_BASE26`, `NO_LOOK_ALIKES_BASE51` , `NUMBERS_BIN` , `NUMBERS_OCT` , `NUMBERS_DEC` , `NUMBERS_HEX`
 
 Example:
 

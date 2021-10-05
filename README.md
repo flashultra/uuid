@@ -93,6 +93,7 @@ You can use Uuid to get any random number between some range, based on Xorshift1
 | `Uuid.NO_LOOK_ALIKES_BASE51` | Numbers and english alphabet without lookalikes: `1`, `l`, `I`, `0`, `O`, `o`, `u`, `v`, `5`, `S`, `s` | 
 | `Uuid.FLICKR_BASE58` | Avoid similar characters 0/O, 1/I/l | 
 | `Uuid.BASE_70` | Numbers, English letters and special character | 
+| `Uuid.BASE_85` | Numbers, English letters and special character (ZeroMQ (Z85) alphabet) | 
 | `Uuid.COOKIE_BASE90` | Safe for HTTP cookies values  | 
 | `Uuid.NANO_ID_ALPHABET` | Alphabet used to create NanoId string  | 
 | `Uuid.NUMBERS_BIN` | Binary numbers | 

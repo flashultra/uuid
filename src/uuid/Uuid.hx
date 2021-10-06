@@ -34,7 +34,7 @@ class Uuid {
 	static var clockSequenceBuffer:Int = -1;
 	static var regexp:EReg = ~/^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
 	
-	static var rndSeed:Int64 = Int64.fromFloat(Timer.stamp() * 1000);
+	static var rndSeed:Int64 = Int64.fromFloat(#if js Date.now().getTime() #else Sys.time()*1000 #end);
 	static var state0 = splitmix64_seed(rndSeed);
 	static var state1 = splitmix64_seed(rndSeed + 1);
 

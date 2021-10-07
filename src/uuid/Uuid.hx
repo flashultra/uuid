@@ -1,7 +1,6 @@
 package uuid;
 
 import haxe.ds.Vector;
-import haxe.Timer;
 import haxe.Int64;
 import haxe.io.Bytes;
 import haxe.crypto.Md5;
@@ -34,9 +33,10 @@ class Uuid {
 	static var clockSequenceBuffer:Int = -1;
 	static var regexp:EReg = ~/^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
 	
-	static var rndSeed:Int64 = Int64.fromFloat(#if js Date.now().getTime() #else Sys.time()*1000 #end);
+	static var rndSeed:Int64 = Int64.fromFloat(#if js js.lib.Date.now() #else Sys.time()*1000 #end);
 	static var state0 = splitmix64_seed(rndSeed);
-	static var state1 = splitmix64_seed(rndSeed + 1);
+	static var state1 = splitmix64_seed(rndSeed + Std.random(10000) + 1);
+	private static var DVS:Int64 = Int64.make(0x00000001, 0x00000000);
 
 	private static function splitmix64_seed(index:Int64):Int64 {
 		var result:Int64 = (index + Int64.make(0x9E3779B9, 0x7F4A7C15));
@@ -97,7 +97,7 @@ class Uuid {
 			clockSeq = clockSequenceBuffer;
 		}
 		if (msecs == -1) {
-			msecs = Timer.stamp();
+			msecs = Math.fround(#if js js.lib.Date.now() #else Sys.time()*1000 #end);
 		}
 		var nsecs = optNsecs;
 		if (optNsecs == -1) {
@@ -118,14 +118,14 @@ class Uuid {
 		clockSequenceBuffer = clockSeq;
 
 		msecs += 12219292800000;
-		var dvs:Int64 = Int64.make(0x00000001, 0x00000000);
-		var tl:Int = (((Int64.fromFloat(msecs) & 0xfffffff) * 10000 + nsecs) % dvs).low;
+		var imsecs:Int64 = Int64.fromFloat(msecs);
+		var tl:Int = (((imsecs & 0xfffffff) * 10000 + nsecs) % DVS).low;
 		buffer.set(0, tl >>> 24 & 0xff);
 		buffer.set(1, tl >>> 16 & 0xff);
 		buffer.set(2, tl >>> 8 & 0xff);
 		buffer.set(3, tl & 0xff);
 
-		var tmh:Int = ((Int64.fromFloat(msecs) / dvs * 10000) & 0xfffffff).low;
+		var tmh:Int = ((imsecs / DVS * 10000) & 0xfffffff).low;
 		buffer.set(4, tmh >>> 8 & 0xff);
 		buffer.set(5, tmh & 0xff);
 

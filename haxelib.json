@@ -2,10 +2,10 @@
   "name": "uuid",
   "url": "https://github.com/flashultra/uuid",
   "license": "MIT",
-  "tags": ["cross","haxe","uuid","game","binary","nanoid","short-uuid"],
-  "description": "Cross platform, simple Uuid , Short-Uuid and NanoId generator. Uuid generation is based on RFC4122 . Support versions are v1, v3, v4 and v5",
-  "version": "2.3.3",
-  "releasenote": "Optimize Uuid.V1(). Better init random seed.",
+  "tags": ["cross","haxe","uuid","game","binary","nanoid","short-uuid","flakeid","snowflake","flake"],
+  "description": "Cross platform, simple Uuid , Short-Uuid , NanoId and FlakeId generator. Uuid generation is based on RFC4122 . Support versions are v1, v3, v4 and v5",
+  "version": "2.4.0",
+  "releasenote": "Add time-sortable unique FlakeId ( based on snowflake)",
   "contributors": [ "flashultra" ],
   "classPath": "src"
 }

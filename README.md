@@ -23,6 +23,29 @@ A tiny, secure, URL-friendly, unique string ID generator ( [based on nanoid](htt
 * **Compact.** It uses a larger alphabet than UUID (`A-Za-z0-9_-`).   So ID size was reduced from 36 to 21 symbols.
 * **Portable.** Nano ID was ported  to many programming languages.
 
+# FlakeId
+
+FlakeId is a distributed ID generation algorithm based on Twitter Snowflake .
+Advantages of FlakeID over UUID :
+* Flake IDs are 64-bits, half the size of a UUID
+* Can use time as first component and remain sortable
+
+Each Flake ID is 64 bits long, consisting of:
+* **Timestamp** - a 42 bit long number of milliseconds elapsed since 1 January 1970 00:00:00 UTC
+* **Datacenter Id** - a 5 bit long datacenter identifier. It can take up to 32 unique values (including 0)
+* **Machine Id** - a 5 bit long machine identifier. It can take up to 32 unique values (including 0)
+* **Counter** - a 12 bit long counter of a self-increasing sequence. It can take up to 4096 unique values in a millisecond.
+
+Breakdown of bits for an id e.g. `6848815309908238345` (counter is `9`, datacenter is `11` and worker `6`) is as follows:
+```
+ 010111110000101111100001001111001101111101 01011 00110 000000001001
+                                                       |------------| 12 bit counter
+                                                 |-----|               5 bit machine id
+                                           |-----|                     5 bit datacenter id
+                                           |----- -----|              10 bit generator identifier
+|------------------------------------------|                          42 bit timestamp
+```
+
 ## Convert from/to one type to another 
 Here is an example of usage, where we store ```nanoId``` in the database ( it's much more compact) , but it is shown to the user as ```uuid``` , for readability and security reasons.
 
@@ -79,6 +102,12 @@ You can use Uuid to get any random number between some range, based on Xorshift1
 | [`Uuid.convert()`](#uuidconvertnumber-fromalphabettoalphabetstring) | Convert any string from one alphabet to another | 
 | [`Uuid.validate()`](#uuidvalidateuuid-separatorbool) | Test a string to see if it is a valid UUID |
 | [`Uuid.version()`](#uuidversionuuid-separatorint) | Detect RFC version of a UUID |
+|  |  |
+| [`flakeId.nextId()`](#uuidversionuuid-separatorint) | Return generated id |
+| [`flakeId.setMachineId()`](#uuidversionuuid-separatorint) | Set unique machine id, default is random between 0 and 31 |
+| [`flakeId.setDatacenterId()`](#uuidversionuuid-separatorint) | Set unique datecenter id, default is random between 0 and 31|
+| [`flakeId.setCustomEpoch()`](#uuidversionuuid-separatorint) | Set custom Epoch time , default is 1420070400 |
+| [`flakeId.timestamp()`](#uuidversionuuid-separatorint) | Get the current Unix time in milliseconds |
 
 ## API Constants
 
@@ -450,6 +479,84 @@ Example with RFC `URL` namespace:
 Uuid.v5('https://www.w3.org/', Uuid.URL); // ⇨ 'c106a26a-21bb-5538-8bf2-57095d1976c1'
 ```
 
+### flakeid.nextId():Int64
+
+Return a unique 64-bit number 
+
+|           |                                          |
+| --------- | ----------------------------------------                              |
+| _returns_ | `Int64`  
+
+Example:
+
+```haxe
+var flakeId = new FlakeId();
+flakeId.nextId();  // return a unique identifier
+```
+
+### flakeid.setMachineId(machineId):Void
+
+Set machine identifier ( could be 0 to 31)
+
+|  |  |
+| --- | --- |
+| `machineId`| `Int`  A 5 bit long machine identifier |
+| _returns_ |   |
+
+Example:
+
+```haxe
+var flakeId = new FlakeId();
+flakeId.setMachineId(4);
+```
+
+### flakeid.setDatacenterId(datacenterId):Void
+
+Set machine identifier ( could be 0 to 31)
+
+|  |  |
+| --- | --- |
+| `datacenterId`| `Int`  A 5 bit long datacenter identifier |
+| _returns_ |   |
+
+Example:
+
+```haxe
+var flakeId = new FlakeId();
+flakeId.setDatacenterId(9);
+```
+
+### flakeid.setCustomEpoch(customEpoch):Void
+
+ Set time in milliseconds elapsed since 1 January 1970 00:00:00 UTC
+
+|  |  |
+| --- | --- |
+| `customEpoch`| `Int64`  Unix time in milliseconds  |
+| _returns_ |   |
+
+Example:
+
+```haxe
+var flakeId = new FlakeId();
+flakeId.setCustomEpoch(Int64.make(0x0000015F,0x2064AA48));
+```
+
+### flakeid.timestamp():Int64
+
+Return the current Unix time in milliseconds
+
+|           |                                          |
+| --------- | ----------------------------------------                              |
+| _returns_ | `Int64`  
+
+Example:
+
+```haxe
+var flakeId = new FlakeId();
+flakeId.timestamp(); //Current time in milliseconds
+```
+
 ## Usage
 Version 1 (timestamp):
 ```haxe
@@ -498,3 +605,13 @@ trace("UUID: " + uuid);
 
 uuid = Uuid.v5("The Cross-platform Toolkit",'7e9606ce-8af4-435b-89d6-66d6d885b97a');
 trace("UUID: " + uuid);
+```
+
+Flake ID
+```haxe 
+var flakeId = new FlakeId(11,6);  // datecenterid is `11` and machineid id `6`
+var uniqueId = flakeId.nextId(); // create one unique id
+for (i in 0...10) {
+  trace(flakeId.nextId());  //generate ten unique ids
+}
+```

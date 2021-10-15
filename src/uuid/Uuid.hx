@@ -204,7 +204,7 @@ class Uuid {
 		return Std.parseInt("0x"+uuid.substr(12,1));
 	}
 
-	private static function hexToUuid( hex:String , separator:String):String {
+	public static function hexToUuid( hex:String , separator:String):String {
 		return ( hex.substr(0, 8) + separator + hex.substr(8, 4) + separator + hex.substr(12, 4) + separator + hex.substr(16, 4) + separator + hex.substr(20, 12));
 	}
 

@@ -26,6 +26,7 @@ A tiny, secure, URL-friendly, unique string ID generator ( [based on nanoid](htt
 # FlakeId
 
 FlakeId is a distributed ID generation algorithm based on Twitter Snowflake .
+
 Advantages of FlakeID over UUID :
 * Flake IDs are 64-bits, half the size of a UUID
 * Can use time as first component and remain sortable

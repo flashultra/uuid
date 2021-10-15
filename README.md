@@ -103,11 +103,11 @@ You can use Uuid to get any random number between some range, based on Xorshift1
 | [`Uuid.validate()`](#uuidvalidateuuid-separatorbool) | Test a string to see if it is a valid UUID |
 | [`Uuid.version()`](#uuidversionuuid-separatorint) | Detect RFC version of a UUID |
 |  |  |
-| [`flakeId.nextId()`](#uuidversionuuid-separatorint) | Return generated id |
-| [`flakeId.setMachineId()`](#uuidversionuuid-separatorint) | Set unique machine id, default is random between 0 and 31 |
-| [`flakeId.setDatacenterId()`](#uuidversionuuid-separatorint) | Set unique datecenter id, default is random between 0 and 31|
-| [`flakeId.setCustomEpoch()`](#uuidversionuuid-separatorint) | Set custom Epoch time , default is 1420070400 |
-| [`flakeId.timestamp()`](#uuidversionuuid-separatorint) | Get the current Unix time in milliseconds |
+| [`flakeId.nextId()`](#flakeidnextidint64) | Return generated id |
+| [`flakeId.setMachineId()`](#flakeidsetmachineidmachineidvoid) | Set unique machine id, default is random between 0 and 31 |
+| [`flakeId.setDatacenterId()`](#flakeidsetdatacenteriddatacenteridvoid) | Set unique datecenter id, default is random between 0 and 31|
+| [`flakeId.setCustomEpoch()`](#flakeidsetcustomepochcustomepochvoid) | Set custom Epoch time , default is 1420070400 |
+| [`flakeId.timestamp()`](#flakeidtimestampint64) | Get the current Unix time in milliseconds |
 
 ## API Constants
 

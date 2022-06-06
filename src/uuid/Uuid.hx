@@ -33,7 +33,7 @@ class Uuid {
 	static var clockSequenceBuffer:Int = -1;
 	static var regexp:EReg = ~/^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
 	
-	static var rndSeed:Int64 = Int64.fromFloat(#if js js.lib.Date.now() #else Sys.time()*1000 #end);
+	static var rndSeed:Int64 = Int64.fromFloat(#if js js.lib.Date.now() #elseif sys Sys.time()*1000 #else Date.now().getTime() #end);
 	static var state0 = splitmix64_seed(rndSeed);
 	static var state1 = splitmix64_seed(rndSeed + Std.random(10000) + 1);
 	private static var DVS:Int64 = Int64.make(0x00000001, 0x00000000);
@@ -97,7 +97,7 @@ class Uuid {
 			clockSeq = clockSequenceBuffer;
 		}
 		if (msecs == -1) {
-			msecs = Math.fround(#if js js.lib.Date.now() #else Sys.time()*1000 #end);
+			msecs = Math.fround(#if js js.lib.Date.now() #elseif sys Sys.time()*1000 #else Date.now().getTime() #end);
 		}
 		var nsecs = optNsecs;
 		if (optNsecs == -1) {

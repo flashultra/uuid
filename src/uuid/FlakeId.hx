@@ -46,6 +46,29 @@ class FlakeId {
 
     public function nextId():Int64
     {
+        var currentTimestamp:Int64 = baseId();		
+
+        var id:Int64 = ( currentTimestamp << TIMESTMP_LEFT)
+                   | (datacenterId << DATACENTER_LEFT) 
+                   | (machineId << MACHINE_LEFT)
+                   | sequence;
+
+        return id;
+    }
+	
+	public function nextRandom():Int64
+    {
+        var currentTimestamp:Int64 = baseId();		
+
+        var id:Int64 = ( currentTimestamp << TIMESTMP_LEFT)
+                   | (Uuid.randomFromRange(0,1023) << DATACENTER_LEFT) 
+                   | sequence;
+
+        return id;
+    }
+		
+	private function baseId():Int64
+	{
         var currentTimestamp :Int64 = timestamp();
 
         if (currentTimestamp  < lastTimestamp) {
@@ -61,15 +84,10 @@ class FlakeId {
             sequence = Uuid.randomFromRange(0,9) & MAX_SEQUENCE;
         }
 
-        lastTimestamp = currentTimestamp ;
-
-        var id:Int64 = ((currentTimestamp - customEpoch) << TIMESTMP_LEFT)
-                   | (datacenterId << DATACENTER_LEFT) 
-                   | (machineId << MACHINE_LEFT)
-                   | sequence;
-
-        return id;
-    }
+        lastTimestamp = currentTimestamp;
+		
+		return (currentTimestamp - customEpoch); 
+	}
 
     private function waitNextMillis():Int64
     {
@@ -110,6 +128,6 @@ class FlakeId {
 
     public function timestamp():Int64
     {
-        return Int64.fromFloat(#if js js.lib.Date.now() #else Sys.time()*1000 #end);
+        return Int64.fromFloat(#if js js.lib.Date.now() #elseif sys Sys.time() * 1000 #else Date.now().getTime() #end);
     }
 }

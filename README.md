@@ -25,13 +25,15 @@ A tiny, secure, URL-friendly, unique string ID generator ( [based on nanoid](htt
 
 # FlakeId
 
-FlakeId is a distributed ID generation algorithm based on Twitter Snowflake .
+FlakeId is a distributed ID generation algorithm based on [Twitter Snowflake](https://en.wikipedia.org/wiki/Snowflake_ID) .
 
 Advantages of FlakeID over UUID :
+
 * Flake IDs are 64-bits, half the size of a UUID
 * Can use time as first component and remain sortable
 
 Each Flake ID is 64 bits long, consisting of:
+
 * **Timestamp** - a 42 bit long number of milliseconds elapsed since 1 January 1970 00:00:00 UTC
 * **Datacenter Id** - a 5 bit long datacenter identifier. It can take up to 32 unique values (including 0)
 * **Machine Id** - a 5 bit long machine identifier. It can take up to 32 unique values (including 0)
@@ -48,7 +50,7 @@ Breakdown of bits for an id e.g. `6848815309908238345` (counter is `9`, datacent
 ```
 
 ## Convert from/to one type to another 
-Here is an example of usage, where we store ```nanoId``` in the database ( it's much more compact) , but it is shown to the user as ```uuid``` , for readability and security reasons.
+Here is an example of usage, where we store **nanoId** in the database ( it's much more compact) , but it is shown to the user as **uuid** , for readability and security reasons.
 
 ```haxe
 var uniqueId = Uuid.nanoId(); // Generate unique id and store in database
@@ -182,6 +184,7 @@ Example:
 ### Uuid.parse(uuid, separator):Bytes
 
  Convert UUID string to Bytes
+ 
 |                |                                                                              |
 | -------------- | ---------------------------------------------------------------------------- |
 | `uuid`          | `String` A valid UUID |
@@ -288,6 +291,7 @@ Uuid.randomByte(); // return a number in range [0,255]
 ### Uuid.fromShort(shortUuid, separator,fromAlphabet):String
 
 Translate shorter  UUID format to standard UUID
+
 |           |                                          |
 | --------- | ---------------------------------------- |
 | `shortUuid`     | `String` short uuid string                    |
@@ -327,6 +331,7 @@ Uuid.toShort('6ae99955-2a0d-5dca-94d6-2e2bc8b764d3'); // ecHyJhpvZANyZY6k1L5EYK
 ### Uuid.fromNano(nanoUuid, separator,fromAlphabet):String
 
 Translate shorter  UUID format to standard UUID
+
 |           |                                          |
 | --------- | ---------------------------------------- |
 | `nanoUuid`     | `String` A valid nanoId string                  |
